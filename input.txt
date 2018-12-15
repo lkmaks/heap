@@ -1,0 +1,11 @@
+insert 2
+insert 3
+insert 1
+extract_min
+get_min
+insert 0
+extract_min
+is_empty
+extract_min
+extract_min
+is_empty
