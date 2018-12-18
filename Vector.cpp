@@ -36,6 +36,15 @@ Vector<Key>::Vector(size_t len) {
     ptr = new Key[max(len, (size_t)1)];
 }
 
+template<class Key>
+Vector<Key>::Vector(size_t len, Key key) {
+    this->len = len;
+    ptr = new Key[max(len, (size_t)1)];
+    for (size_t i = 0; i < len; ++i) {
+        ptr[i] = key;
+    }
+}
+
 template <class Key>
 Vector<Key>::~Vector() {
     delete []ptr;

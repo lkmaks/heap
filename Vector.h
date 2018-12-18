@@ -8,11 +8,11 @@
 #include <cstdlib>
 
 
-
 template<class Key>
 class Vector {
 public:
     explicit Vector(size_t len = 0);
+    explicit Vector(size_t, Key);
     ~Vector();
 
     size_t size() const;

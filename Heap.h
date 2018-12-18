@@ -26,6 +26,7 @@ public:
         Pointer(Node *ptr_);
     public:
         Pointer();
+        Key getVal();
     };
 
     Heap();
@@ -51,10 +52,15 @@ private:
     };
 
     Vector<Node*> nodes;
+    // amount of children of vertex
+    int k;
 
     void swap_nodes(size_t i, size_t j);
     void siftUp(size_t index);
     void siftDown(size_t index);
+
+    double func_support(double);
+    double func_optimized(double, int, int);
 };
 
 #endif //HEAP_HEAP_H

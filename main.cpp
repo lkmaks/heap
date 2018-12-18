@@ -1,14 +1,8 @@
-#include <bits/stdc++.h>
-#include "FibonacciHeap.h"
-#include "FibonacciHeap.cpp"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 
-using namespace std;
-
-int main() {
-    FibonacciHeap<int> h;
-
-
-
-    return 0;
+int main(int argc, char *argv[]) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
