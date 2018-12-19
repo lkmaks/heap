@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <fstream>
 #include "../Heap.h"
+#include "TimeReport.h"
 
 using testing::Eq;
 
@@ -115,4 +117,24 @@ TEST(ExtractMinOnEmptyHeap, HeapValidationTest) {
     ASSERT_NO_THROW(h.extract_min());
     h.erase(ptr);
     ASSERT_THROW(h.extract_min(), std::logic_error);
+}
+
+
+TEST(InsertExtract, HeapTimeTests) {
+    time_t t0 = clock();
+
+    int q = 5000000;
+    Heap<int> h;
+    for (int i = 0; i < q; ++i) {
+        if (!h.is_empty() && !(rand() % 3)) {
+            h.extract_min();
+        }
+        else {
+            h.insert(i);
+        }
+    }
+
+    int res = clock() - t0;
+
+    reportTime("Heap", res);
 }

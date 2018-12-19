@@ -1,7 +1,3 @@
-//
-// Created by M on 31.10.2018.
-//
-
 #ifndef HEAP_VECTOR_H
 #define HEAP_VECTOR_H
 

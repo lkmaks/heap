@@ -5,10 +5,10 @@
 #ifndef HEAP_FIBONACCIHEAP_H
 #define HEAP_FIBONACCIHEAP_H
 
-#include <cstdlib>
-#include "Vector.h"
 
-using namespace std;
+#include "Vector.h"
+#include <cstdlib>
+
 
 template <class Key>
 class FibonacciHeap {
@@ -55,14 +55,6 @@ private:
 };
 
 
-template<class Key>
-FibonacciHeap<Key>::Node::Node(Key key_) {
-    key = key_;
-    parent = child = prev = next = nullptr;
-    degree = 0;
-    mark = false;
-}
-
 
 template <class Key>
 FibonacciHeap<Key>::Pointer::Pointer(Node *ptr_) {
@@ -87,97 +79,10 @@ FibonacciHeap<Key>::FibonacciHeap() {
     min_node = nullptr;
 }
 
+
 template <class Key>
 bool FibonacciHeap<Key>::is_empty() const {
     return min_node == nullptr;
-}
-
-
-template <class Key>
-void FibonacciHeap<Key>::attach(Node *root, Node *child) {
-    // attaches child node to root node
-
-    Node *root_child = root->child;
-    if (root_child == nullptr) {
-        root->child = child;
-        child->next = child->prev = child;
-    }
-    else {
-        Node *next_root_child = root_child->next;
-        root_child->next = child, next_root_child->prev = child;
-        child->prev = root_child, child->next = next_root_child;
-    }
-    ++root->degree;
-    child->parent = root;
-}
-
-
-template <class Key>
-void FibonacciHeap<Key>::add_node_to_roots(Node *node) {
-    // assume node is a root in a tree (parent == null)
-    // and we add it to roots list maintaining min_node
-
-    if (min_node == nullptr) {
-        min_node = node;
-        node->next = node->prev = node;
-    }
-    else {
-        Node *next_node = min_node->next;
-        node->next = next_node, node->prev = min_node;
-        min_node->next = node, next_node->prev = node;
-        if (node->key < min_node->key) {
-            min_node = node;
-        }
-    }
-}
-
-template <class Key>
-void FibonacciHeap<Key>::consolidate(Node *root_node) {
-    // param root_node - arbitrary node in roots list
-    Vector<Node*> arr;
-    Node *cur = root_node;
-    Node *start = cur;
-    arr.push_back(cur);
-    cur = cur->next;
-    while (cur != start ) {
-        arr.push_back(cur);
-        cur = cur->next;
-    }
-
-    size_t max_degree = 0;
-    for (int i = 0; i < arr.size(); ++i) {
-        arr[i]->prev = arr[i]->next = nullptr;
-        if (max_degree < arr[i]->degree) {
-            max_degree = arr[i]->degree;
-        }
-    }
-
-    Vector<Node*> con;
-    for (int i = 0; i < arr.size(); ++i) {
-        cur = arr[i];
-        while (con.size() <= cur->degree) {
-            con.push_back(nullptr);
-        }
-        while (con[cur->degree] != nullptr) {
-            Node *cur2 = con[cur->degree];
-            if (cur->key > cur2->key) {
-                Node *tmp = cur;
-                cur = cur2;
-                cur2 = tmp;
-            }
-            con[cur->degree] = nullptr;
-            attach(cur, cur2);
-            if (con.size() <= cur->degree) {
-                con.push_back(nullptr);
-            }
-        }
-        con[cur->degree] = cur;
-    }
-    for (int i = 0; i < con.size(); ++i) {
-        if (con[i] != nullptr) {
-            add_node_to_roots(con[i]);
-        }
-    }
 }
 
 
@@ -268,6 +173,124 @@ void FibonacciHeap<Key>::merge(FibonacciHeap &otherHeap) {
 
 
 template<class Key>
+void FibonacciHeap<Key>::decrease(Pointer ptr, Key key) {
+    Node *cur = ptr.ptr;
+    if (cur->key < key) {
+        throw std::invalid_argument("Decrease new value is bigger than current value");
+    }
+
+    cur->key = key;
+    Node *par = cur->parent;
+    if (par != nullptr && cur->key < par->key) {
+        cut(cur);
+        cascading_cut(par);
+    }
+    else if (cur->key < min_node->key) {
+        min_node = cur;
+    }
+}
+
+
+
+template<class Key>
+FibonacciHeap<Key>::Node::Node(Key key_) {
+    key = key_;
+    parent = child = prev = next = nullptr;
+    degree = 0;
+    mark = false;
+}
+
+
+template <class Key>
+void FibonacciHeap<Key>::attach(Node *root, Node *child) {
+    // attaches child node to root node
+
+    Node *root_child = root->child;
+    if (root_child == nullptr) {
+        root->child = child;
+        child->next = child->prev = child;
+    }
+    else {
+        Node *next_root_child = root_child->next;
+        root_child->next = child, next_root_child->prev = child;
+        child->prev = root_child, child->next = next_root_child;
+    }
+    ++root->degree;
+    child->parent = root;
+}
+
+
+template <class Key>
+void FibonacciHeap<Key>::add_node_to_roots(Node *node) {
+    // assume node is a root in a tree (parent == null)
+    // and we add it to roots list maintaining min_node
+
+    if (min_node == nullptr) {
+        min_node = node;
+        node->next = node->prev = node;
+    }
+    else {
+        Node *next_node = min_node->next;
+        node->next = next_node, node->prev = min_node;
+        min_node->next = node, next_node->prev = node;
+        if (node->key < min_node->key) {
+            min_node = node;
+        }
+    }
+}
+
+
+template <class Key>
+void FibonacciHeap<Key>::consolidate(Node *root_node) {
+    // param root_node - arbitrary node in roots list
+    Vector<Node*> arr;
+    Node *cur = root_node;
+    Node *start = cur;
+    arr.push_back(cur);
+    cur = cur->next;
+    while (cur != start ) {
+        arr.push_back(cur);
+        cur = cur->next;
+    }
+
+    size_t max_degree = 0;
+    for (int i = 0; i < arr.size(); ++i) {
+        arr[i]->prev = arr[i]->next = nullptr;
+        if (max_degree < arr[i]->degree) {
+            max_degree = arr[i]->degree;
+        }
+    }
+
+    Vector<Node*> con;
+    for (int i = 0; i < arr.size(); ++i) {
+        cur = arr[i];
+        while (con.size() <= cur->degree) {
+            con.push_back(nullptr);
+        }
+        while (con[cur->degree] != nullptr) {
+            Node *cur2 = con[cur->degree];
+            if (cur->key > cur2->key) {
+                Node *tmp = cur;
+                cur = cur2;
+                cur2 = tmp;
+            }
+            con[cur->degree] = nullptr;
+            attach(cur, cur2);
+            if (con.size() <= cur->degree) {
+                con.push_back(nullptr);
+            }
+        }
+        con[cur->degree] = cur;
+    }
+    for (int i = 0; i < con.size(); ++i) {
+        if (con[i] != nullptr) {
+            add_node_to_roots(con[i]);
+        }
+    }
+}
+
+
+template<class Key>
 void FibonacciHeap<Key>::cut(Node *node) {
     Node *par = node->parent;
     --par->degree;
@@ -296,25 +319,6 @@ void FibonacciHeap<Key>::cascading_cut(Node *node) {
             cut(node);
             cascading_cut(par);
         }
-    }
-}
-
-
-template<class Key>
-void FibonacciHeap<Key>::decrease(Pointer ptr, Key key) {
-    Node *cur = ptr.ptr;
-    if (cur->key < key) {
-        throw std::logic_error("Decrease new value is bigger than current value");
-    }
-
-    cur->key = key;
-    Node *par = cur->parent;
-    if (par != nullptr && cur->key < par->key) {
-        cut(cur);
-        cascading_cut(par);
-    }
-    else if (cur->key < min_node->key) {
-        min_node = cur;
     }
 }
 

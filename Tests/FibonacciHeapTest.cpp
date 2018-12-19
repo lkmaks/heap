@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "../FibonacciHeap.h"
+#include "TimeReport.h"
 
 using testing::Eq;
 
@@ -20,7 +21,7 @@ TEST(InsertExtract, FibonacciHeapCorrectnessTests) {
 }
 
 
-TEST(InsertEraseViaDecreaseByPointer, FibonacciHeapCorrectnessTest) {
+TEST(InsertEraseViaDecreaseByPointer, FibonacciHeapCorrectnessTests) {
     int q = 100;
     FibonacciHeap<int> h;
     Vector<FibonacciHeap<int>::Pointer> arr;
@@ -55,7 +56,7 @@ TEST(InsertEraseViaDecreaseByPointer, FibonacciHeapCorrectnessTest) {
 }
 
 
-TEST(InsertEqualNumbers, FibonacciHeapCorrectnessTest) {
+TEST(InsertEqualNumbers, FibonacciHeapCorrectnessTests) {
     FibonacciHeap<int> h;
     h.insert(1);
     h.insert(1);
@@ -69,7 +70,7 @@ TEST(InsertEqualNumbers, FibonacciHeapCorrectnessTest) {
 }
 
 
-TEST(MergeHeaps, FibonacciHeapCorrectnessTest) {
+TEST(MergeHeaps, FibonacciHeapCorrectnessTests) {
     srand(34234);
     Vector<int> qs;
     qs.push_back(1);
@@ -87,7 +88,8 @@ TEST(MergeHeaps, FibonacciHeapCorrectnessTest) {
             for (int i = 0; i < q; ++i) {
                 if (rand() % 2) {
                     h1.insert(i);
-                } else {
+                }
+                else {
                     h2.insert(i);
                 }
             }
@@ -98,4 +100,66 @@ TEST(MergeHeaps, FibonacciHeapCorrectnessTest) {
             }
         }
     }
+}
+
+
+TEST(GetDecreaseExtract, FibonacciHeapCorrectnessTests) {
+    FibonacciHeap<int> h;
+    FibonacciHeap<int>::Pointer ptr1 = h.insert(1);
+    FibonacciHeap<int>::Pointer ptr2 = h.insert(2);
+    FibonacciHeap<int>::Pointer ptr3 = h.insert(3);
+    ASSERT_EQ(h.get_min(), 1);
+    h.decrease(ptr2, 1);
+    ASSERT_EQ(h.get_min(), 1);
+    h.decrease(ptr3, -1);
+    ASSERT_EQ(h.get_min(), -1);
+    h.extract_min();
+    ASSERT_EQ(h.get_min(), 1);
+    h.extract_min();
+    ASSERT_EQ(h.get_min(), 1);
+    h.extract_min();
+    ASSERT_EQ(h.is_empty(), true);
+}
+
+
+TEST(GetMin, FibonacciHeapValidationTests) {
+    FibonacciHeap<int> h;
+    ASSERT_THROW(h.get_min(), std::logic_error);
+    h.insert(1);
+    ASSERT_NO_THROW(h.get_min());
+}
+
+
+TEST(ExtractMin, FibonacciHeapValidationTests) {
+    FibonacciHeap<int> h;
+    ASSERT_THROW(h.extract_min(), std::logic_error);
+    h.insert(1);
+    ASSERT_NO_THROW(h.extract_min());
+}
+
+
+TEST(Decrease, FibonacciHeapValidationTests) {
+    FibonacciHeap<int> h;
+    FibonacciHeap<int>::Pointer ptr = h.insert(1);
+    ASSERT_THROW(h.decrease(ptr, 2), std::invalid_argument);
+    ASSERT_NO_THROW(h.decrease(ptr, -10));
+}
+
+
+TEST(InsertExtract, FibonacciHeapTimeTests) {
+    time_t t0 = clock();
+
+    int q = 5000000;
+    FibonacciHeap<int> h;
+    for (int i = 0; i < q; ++i) {
+        if (!h.is_empty() && !(rand() % 3)) {
+            h.extract_min();
+        }
+        else {
+            h.insert(i);
+        }
+    }
+    int res = clock() - t0;
+
+    reportTime("FibonacciHeap", res);
 }

@@ -6,11 +6,9 @@
 #define HEAP_HEAP_H
 
 
-#include <cstdlib>
 #include "Vector.h"
-#include <stdexcept>
+#include <cstdlib>
 #include <cmath>
-
 
 
 template<class Key>
@@ -66,13 +64,6 @@ private:
 
 
 
-template<class Key>
-Heap<Key>::Node::Node(Key key_, size_t index_) {
-    key = key_;
-    index = index_;
-}
-
-
 template <class Key>
 Heap<Key>::Pointer::Pointer() {
     ptr = nullptr;
@@ -90,50 +81,11 @@ Key Heap<Key>::Pointer::getKey() {
     return ptr->key;
 }
 
+
 template <class Key>
 Heap<Key>::Heap() {
     k = 2;
 }
-
-
-
-template <class Key>
-void Heap<Key>::swap_nodes(size_t i, size_t j) {
-    nodes[i]->index = j;
-    nodes[j]->index = i;
-    swap(nodes[i], nodes[j]);
-}
-
-
-template <class Key>
-void Heap<Key>::siftUp(size_t index) {
-    while (index > 0 && nodes[index]->key < nodes[(index - 1) / k]->key) {
-        swap_nodes(index, (index - 1) / k);
-        index = (index - 1) / k;
-    }
-}
-
-
-template<class Key>
-void Heap<Key>::siftDown(size_t index) {
-    while (index * k + 1 < nodes.size()) {
-        size_t min_id = index * k + 1;
-        for (int i = 2; i <= k; ++i) {
-            if (index * k + i < nodes.size() && nodes[index * k + i]->key < nodes[min_id]->key) {
-                min_id = index * k + i;
-            }
-        }
-
-        if (nodes[min_id]->key < nodes[index]->key) {
-            swap_nodes(min_id, index);
-            index = min_id;
-        }
-        else {
-            break;
-        }
-    }
-}
-
 
 
 template <class Key>
@@ -207,19 +159,6 @@ Heap<Key>::Heap(Iterator begin, Iterator end) {
 }
 
 
-
-template <class Key>
-double Heap<Key>::func_optimized(double x, int a, int b) {
-    return a / log(x) + b * x / log(x);
-}
-
-
-template<class Key>
-double Heap<Key>::func_support(double x) {
-    return x * (log(x) - 1);
-}
-
-
 template <class Key>
 void Heap<Key>::optimize(size_t insertCount, size_t extractCount) {
     // in order to minimize amount of operations, we should minimize:
@@ -257,6 +196,62 @@ void Heap<Key>::optimize(size_t insertCount, size_t extractCount) {
 
 
 
+
+template<class Key>
+Heap<Key>::Node::Node(Key key_, size_t index_) {
+    key = key_;
+    index = index_;
+}
+
+
+template <class Key>
+void Heap<Key>::swap_nodes(size_t i, size_t j) {
+    nodes[i]->index = j;
+    nodes[j]->index = i;
+    swap(nodes[i], nodes[j]);
+}
+
+
+template <class Key>
+void Heap<Key>::siftUp(size_t index) {
+    while (index > 0 && nodes[index]->key < nodes[(index - 1) / k]->key) {
+        swap_nodes(index, (index - 1) / k);
+        index = (index - 1) / k;
+    }
+}
+
+
+template<class Key>
+void Heap<Key>::siftDown(size_t index) {
+    while (index * k + 1 < nodes.size()) {
+        size_t min_id = index * k + 1;
+        for (int i = 2; i <= k; ++i) {
+            if (index * k + i < nodes.size() && nodes[index * k + i]->key < nodes[min_id]->key) {
+                min_id = index * k + i;
+            }
+        }
+
+        if (nodes[min_id]->key < nodes[index]->key) {
+            swap_nodes(min_id, index);
+            index = min_id;
+        }
+        else {
+            break;
+        }
+    }
+}
+
+
+template <class Key>
+double Heap<Key>::func_optimized(double x, int a, int b) {
+    return a / log(x) + b * x / log(x);
+}
+
+
+template<class Key>
+double Heap<Key>::func_support(double x) {
+    return x * (log(x) - 1);
+}
 
 
 

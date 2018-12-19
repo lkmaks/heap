@@ -5,9 +5,8 @@
 #ifndef HEAP_BINOMIALHEAP_H
 #define HEAP_BINOMIALHEAP_H
 
-#include "Vector.h"
 
-#include <stdexcept>
+#include "Vector.h"
 
 
 template <class Key>
