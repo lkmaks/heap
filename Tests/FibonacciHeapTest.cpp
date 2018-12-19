@@ -67,3 +67,35 @@ TEST(InsertEqualNumbers, FibonacciHeapCorrectnessTest) {
     ASSERT_EQ(h.extract_min(), 2);
     ASSERT_EQ(h.is_empty(), true);
 }
+
+
+TEST(MergeHeaps, FibonacciHeapCorrectnessTest) {
+    srand(34234);
+    Vector<int> qs;
+    qs.push_back(1);
+    qs.push_back(2);
+    qs.push_back(3);
+    qs.push_back(4);
+    qs.push_back(5);
+    qs.push_back(100);
+
+    for (int ic = 0; ic < qs.size(); ++ic) {
+        int q = qs[ic];
+        for (int j = 0; j < 10; ++j) {
+            FibonacciHeap<int> h1, h2;
+
+            for (int i = 0; i < q; ++i) {
+                if (rand() % 2) {
+                    h1.insert(i);
+                } else {
+                    h2.insert(i);
+                }
+            }
+            h1.merge(h2);
+            ASSERT_EQ(h2.is_empty(), true);
+            for (int i = 0; i < q; ++i) {
+                ASSERT_EQ(h1.extract_min(), i);
+            }
+        }
+    }
+}

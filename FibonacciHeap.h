@@ -31,42 +31,8 @@ public:
     Pointer insert(Key);
     Key get_min() const;
     Key extract_min();
-    void merge(FibonacciHeap &otherHeap);
+    void merge(FibonacciHeap&);
     void decrease(Pointer, Key);
-
-    void debug_node(Node *node) {
-        cerr << node->key;
-
-        Node *cur = node->child;
-        if (cur == nullptr) {
-            return;
-        }
-
-        cerr << "{";
-        debug_node(cur);
-        if (cur->next != cur) {
-            Node *start = cur;
-            cur = cur->next;
-            while (cur != start) {
-                debug_node(cur);
-                cur = cur->next;
-            }
-        }
-        cerr << "}";
-    }
-
-    void debug() {
-        Node *cur = min_node;
-        debug_node(cur);
-        if (cur->next != cur) {
-            Node *start = cur;
-            cur = cur->next;
-            while (cur != start) {
-                debug_node(cur);
-                cur = cur->next;
-            }
-        }
-    }
 
 private:
     class Node {
@@ -293,6 +259,9 @@ void FibonacciHeap<Key>::merge(FibonacciHeap &otherHeap) {
         c->prev = a;
         d->next = b;
         b->prev = a;
+        if (otherHeap.min_node->key < min_node->key) {
+            min_node = otherHeap.min_node;
+        }
     }
     otherHeap.min_node = nullptr;
 }
