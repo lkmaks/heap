@@ -146,7 +146,7 @@ TEST(Decrease, FibonacciHeapValidationTests) {
 }
 
 
-TEST(InsertExtract, FibonacciHeapTimeTests) {
+TEST(DISABLED_InsertExtract, FibonacciHeapTimeTests) {
     time_t t0 = clock();
 
     int q = 5000000;
@@ -161,5 +161,84 @@ TEST(InsertExtract, FibonacciHeapTimeTests) {
     }
     int res = clock() - t0;
 
-    reportTime("FibonacciHeap", res);
+    reportTime("FibonacciHeap inserts and extracts", res);
+}
+
+TEST(DISABLED_InsertDecreaseExtract, FibonacciHeapTimeTests) {
+    // In this test decreases happen to positive numbers and extracts to neative
+    // in order to avoid decreasing on invalidated pointer
+
+    time_t t0 = clock();
+    srand(123);
+
+    int q = 50000000;
+    FibonacciHeap<long long> h;
+    Vector<FibonacciHeap<long long>::Pointer> pointers;
+    pointers.push_back(h.insert(1));
+    Vector<long long> vals;
+    vals.push_back(1ll);
+    for (int i = 0; i < q; ++i) {
+        if (h.is_empty()) {
+            pointers.push_back(h.insert(i));
+            vals.push_back(i);
+        }
+        else if (rand() % 2) {
+            pointers.push_back(h.insert(i));
+            vals.push_back(i);
+        }
+        else if (rand() % 2 && h.get_min() < 0) {
+            h.extract_min();
+        }
+        else {
+            int pointer_id = rand() % pointers.size();
+            if (vals[pointer_id] > 0) {
+                FibonacciHeap<long long>::Pointer ptr = pointers[pointer_id];
+                h.decrease(ptr, ptr.getKey() - i / 2);
+                vals[pointer_id] -= i / 2;
+            }
+        }
+    }
+    int res = clock() - t0;
+
+    reportTime("FibonacciHeap inserts, extracts and decreases", res);
+}
+
+
+TEST(DISABLED_InsertExtractDecreaseAtSameElements, FibonacciHeapTimeTests) {
+    // In this test decreases happen to positive numbers and extracts to neative
+    // in order to avoid decreasing on invalidated pointer
+
+    time_t t0 = clock();
+    srand(123);
+
+    int q = 50000000;
+    FibonacciHeap<long long> h;
+    Vector<FibonacciHeap<long long>::Pointer> pointers;
+    pointers.push_back(h.insert(1));
+    Vector<long long> vals;
+    vals.push_back(1ll);
+    for (int i = 0; i < q; ++i) {
+        if (h.is_empty() || i < 100) {
+            pointers.push_back(h.insert(i));
+            vals.push_back(i);
+        }
+        else if (rand() % 2) {
+            pointers.push_back(h.insert(i));
+            vals.push_back(i);
+        }
+        else if (rand() % 2 && h.get_min() < 0) {
+            h.extract_min();
+        }
+        else {
+            int pointer_id = (rand() % (pointers.size() / 10)) * 10;
+            if (vals[pointer_id] > 0) {
+                FibonacciHeap<long long>::Pointer ptr = pointers[pointer_id];
+                h.decrease(ptr, ptr.getKey() - i / 2);
+                vals[pointer_id] -= i / 2;
+            }
+        }
+    }
+    int res = clock() - t0;
+
+    reportTime("FibonacciHeap inserts, extracts and decreases, decreases happen often to same elements", res);
 }

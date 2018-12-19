@@ -120,7 +120,7 @@ TEST(ExtractMinOnEmptyHeap, HeapValidationTest) {
 }
 
 
-TEST(InsertExtract, HeapTimeTests) {
+TEST(InsertExtract, DISABLED_HeapTimeTests) {
     time_t t0 = clock();
 
     int q = 5000000;
@@ -136,5 +136,5 @@ TEST(InsertExtract, HeapTimeTests) {
 
     int res = clock() - t0;
 
-    reportTime("Heap", res);
+    reportTime("Heap inserts and extracts", res);
 }

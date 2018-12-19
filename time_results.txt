@@ -1,3 +1,6 @@
-q = 5000000 (inserts and extracts)
-FibonacciHeap: 5519 ms
-Heap: 1984 ms
+q = 5000000
+Heap inserts and extracts: 1984 ms
+BinomialHeap inserts and extracts: 5206 ms
+FibonacciHeap inserts and extracts: 5519 ms
+FibonacciHeap inserts, extracts and decreases: 6214 ms
+FibonacciHeap inserts, extracts and decreases, decreases happen often to same elements: 6657 ms

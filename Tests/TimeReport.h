@@ -1,6 +1,6 @@
 #ifndef HEAP_TIMEREPORT_H
 #define HEAP_TIMEREPORT_H
-#pragma  once
+
 
 #include <fstream>
 

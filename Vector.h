@@ -18,6 +18,7 @@ public:
     void push_back(Key elem);
     void pop_back();
     void reverse();
+    void clear();
 private:
     Key *ptr;
     size_t len;
@@ -48,6 +49,7 @@ template <class Key>
 bool Vector<Key>::is_empty() const {
     return len == 0;
 }
+
 
 template<class Key>
 Vector<Key>::Vector(size_t len) {
@@ -111,6 +113,12 @@ void Vector<Key>::reverse() {
     for (int i = 0; i < len / 2; ++i) {
         swap(ptr[i], ptr[len - i - 1]);
     }
+}
+
+
+template <class Key>
+void Vector<Key>::clear() {
+    len = 0;
 }
 
 

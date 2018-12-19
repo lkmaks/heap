@@ -1,7 +1,3 @@
-//
-// Created by M on 11.12.2018.
-//
-
 #ifndef HEAP_FIBONACCIHEAP_H
 #define HEAP_FIBONACCIHEAP_H
 
@@ -256,9 +252,7 @@ void FibonacciHeap<Key>::consolidate(Node *root_node) {
     size_t max_degree = 0;
     for (int i = 0; i < arr.size(); ++i) {
         arr[i]->prev = arr[i]->next = nullptr;
-        if (max_degree < arr[i]->degree) {
-            max_degree = arr[i]->degree;
-        }
+        max_degree = max(max_degree, arr[i]->degree);
     }
 
     Vector<Node*> con;
@@ -270,9 +264,7 @@ void FibonacciHeap<Key>::consolidate(Node *root_node) {
         while (con[cur->degree] != nullptr) {
             Node *cur2 = con[cur->degree];
             if (cur->key > cur2->key) {
-                Node *tmp = cur;
-                cur = cur2;
-                cur2 = tmp;
+                swap(cur, cur2);
             }
             con[cur->degree] = nullptr;
             attach(cur, cur2);

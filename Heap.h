@@ -1,7 +1,3 @@
-//
-// Created by M on 30.10.2018.
-//
-
 #ifndef HEAP_HEAP_H
 #define HEAP_HEAP_H
 
@@ -161,6 +157,11 @@ Heap<Key>::Heap(Iterator begin, Iterator end) {
 
 template <class Key>
 void Heap<Key>::optimize(size_t insertCount, size_t extractCount) {
+    if (extractCount == 0) {
+        k = insertCount + 10;
+        return;
+    }
+
     // in order to minimize amount of operations, we should minimize:
     // -> insertCount * log(k, n) + extractCount * log(k, n) * k == ...
     // ... == ln(n) * (insertCount / ln(k) + extractCount * k / ln(k))
