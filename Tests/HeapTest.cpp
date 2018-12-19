@@ -1,10 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "../Heap.h"
-#include "../Heap.cpp"
-
-#include <bits/stdc++.h>
-using namespace std;
 
 using testing::Eq;
 
@@ -50,7 +46,7 @@ TEST(InsertEraseByPointer, HeapCorrectnessTest) {
         }
         pos.pop_back();
 
-        ASSERT_EQ(arr[pos[0]].getVal(), h.get_min());
+        ASSERT_EQ(arr[pos[0]].getKey(), h.get_min());
         ASSERT_EQ(h.is_empty(), false);
     }
     h.extract_min();
@@ -120,5 +116,3 @@ TEST(ExtractMinOnEmptyHeap, HeapValidationTest) {
     h.erase(ptr);
     ASSERT_THROW(h.extract_min(), std::logic_error);
 }
-
-

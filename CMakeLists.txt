@@ -7,6 +7,6 @@ include_directories(lib\\googletest-master\\googletest\\include)
 include_directories(lib\\googletest-master\\googlemock\\include)
 
 
-add_executable(heap main.cpp Heap.cpp Heap.h Vector.cpp Vector.h TrivialHeap.cpp
-        TrivialHeap.h BinomialHeap.cpp BinomialHeap.h FibonacciHeap.cpp FibonacciHeap.h Tests/HeapTest.cpp)
+add_executable(heap main.cpp Heap.h Vector.h
+        TrivialHeap.h BinomialHeap.h FibonacciHeap.h Tests/HeapTest.cpp Tests/BinomialHeapTest.cpp Tests/FibonacciHeapTest.cpp)
 target_link_libraries(heap gtest gtest_main)
