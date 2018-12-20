@@ -3,12 +3,13 @@
 #include <fstream>
 #include "../Heap.h"
 #include "TimeReport.h"
+#include <queue>
 
 using testing::Eq;
 
 
 TEST(InsertExtract, HeapCorrectnessTests) {
-    int q = 100;
+    int q = 1000;
     Heap<int> h;
 
     ASSERT_EQ(h.is_empty(), true);
@@ -22,8 +23,28 @@ TEST(InsertExtract, HeapCorrectnessTests) {
 }
 
 
-TEST(InsertEraseByPointer, HeapCorrectnessTest) {
-    int q = 100;
+TEST(InsertExtractRandOrder, HeapCorrectnessTests) {
+    int q = 1000;
+    Heap<int> h;
+    std::priority_queue<int> h2;
+
+    srand(139);
+    for (int i = 0; i < q; ++i) {
+        if (rand() % 3) {
+            int x = rand() % 100;
+            h.insert(x);
+            h2.push(-x);
+        }
+        else if (!h.is_empty()) {
+            ASSERT_EQ(h.extract_min(), -h2.top());
+            h2.pop();
+        }
+    }
+}
+
+
+TEST(InsertEraseByPointer, HeapCorrectnessTests) {
+    int q = 1000;
     Heap<int> h;
     Vector<Heap<int>::Pointer> arr;
     for (int i = 0; i < q; ++i) {
@@ -56,7 +77,7 @@ TEST(InsertEraseByPointer, HeapCorrectnessTest) {
 }
 
 
-TEST(InsertEqualNumbers, HeapCorrectnessTest) {
+TEST(InsertEqualNumbers, HeapCorrectnessTests) {
     Heap<int> h;
     h.insert(1);
     h.insert(1);
@@ -70,7 +91,7 @@ TEST(InsertEqualNumbers, HeapCorrectnessTest) {
 }
 
 
-TEST(ChangeMethod, HeapCorrectnessTest) {
+TEST(ChangeMethod, HeapCorrectnessTests) {
     Heap<int> h;
     Heap<int>::Pointer ptr = h.insert(1);
     h.insert(2);
@@ -85,8 +106,8 @@ TEST(ChangeMethod, HeapCorrectnessTest) {
 }
 
 
-TEST(IteratorConstructor, HeapCorrectnessTest) {
-    int q = 100;
+TEST(IteratorConstructor, HeapCorrectnessTests) {
+    int q = 1000;
     int *a = new int[q];
     for (int i = 0; i < q; ++i) {
         a[i] = i;
@@ -99,7 +120,7 @@ TEST(IteratorConstructor, HeapCorrectnessTest) {
 }
 
 
-TEST(GetMinOnEmptyHeap, HeapValidationTest) {
+TEST(GetMinOnEmptyHeap, HeapValidationTests) {
     Heap<int> h;
     ASSERT_THROW(h.get_min(), std::logic_error);
     Heap<int>::Pointer ptr = h.insert(1337);
@@ -109,7 +130,7 @@ TEST(GetMinOnEmptyHeap, HeapValidationTest) {
 }
 
 
-TEST(ExtractMinOnEmptyHeap, HeapValidationTest) {
+TEST(ExtractMinOnEmptyHeap, HeapValidationTests) {
     Heap<int> h;
     ASSERT_THROW(h.extract_min(), std::logic_error);
     h.insert(1337);

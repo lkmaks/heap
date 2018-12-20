@@ -2,7 +2,7 @@
 #define HEAP_VECTOR_H
 
 #include <cstdlib>
-
+#include <stdexcept>
 
 template<class Key>
 class Vector {

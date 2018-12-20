@@ -15,7 +15,7 @@ public:
         friend FibonacciHeap<Key>;
     private:
         Node *ptr;
-        Pointer(Node *ptr_);
+        explicit Pointer(Node *ptr_);
     public:
         Pointer();
         Key getKey();
@@ -38,7 +38,7 @@ private:
         Node *parent, *child, *prev, *next;
         size_t degree;
         bool mark;
-        Node(Key);
+        explicit Node(Key);
     };
 
     Node *min_node;
@@ -70,6 +70,7 @@ Key FibonacciHeap<Key>::Pointer::getKey() {
 }
 
 
+
 template <class Key>
 FibonacciHeap<Key>::FibonacciHeap() {
     min_node = nullptr;
@@ -89,6 +90,7 @@ typename FibonacciHeap<Key>::Pointer FibonacciHeap<Key>::insert(Key key) {
     return Pointer(new_node);
 }
 
+
 template<class Key>
 Key FibonacciHeap<Key>::get_min() const {
     if (is_empty()) {
@@ -96,6 +98,7 @@ Key FibonacciHeap<Key>::get_min() const {
     }
     return min_node->key;
 }
+
 
 template <class Key>
 Key FibonacciHeap<Key>::extract_min() {

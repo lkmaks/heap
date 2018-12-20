@@ -2,12 +2,13 @@
 #include <gmock/gmock.h>
 #include "../FibonacciHeap.h"
 #include "TimeReport.h"
+#include <queue>
 
 using testing::Eq;
 
 
 TEST(InsertExtract, FibonacciHeapCorrectnessTests) {
-    int q = 100;
+    int q = 1000;
     FibonacciHeap<int> h;
 
     ASSERT_EQ(h.is_empty(), true);
@@ -21,15 +22,36 @@ TEST(InsertExtract, FibonacciHeapCorrectnessTests) {
 }
 
 
+TEST(InsertExtractRandOrder, FibonacciHeapCorrectnessTests) {
+    int q = 1000;
+    FibonacciHeap<int> h;
+    std::priority_queue<int> h2;
+
+    srand(139);
+    for (int i = 0; i < q; ++i) {
+        if (rand() % 3) {
+            int x = rand() % 100;
+            h.insert(x);
+            h2.push(-x);
+        }
+        else if (!h.is_empty()) {
+            ASSERT_EQ(h.extract_min(), -h2.top());
+            h2.pop();
+        }
+    }
+}
+
+
 TEST(InsertEraseViaDecreaseByPointer, FibonacciHeapCorrectnessTests) {
-    int q = 100;
+    srand(1791791791);
+    int q = 1000;
+
     FibonacciHeap<int> h;
     Vector<FibonacciHeap<int>::Pointer> arr;
     for (int i = 0; i < q; ++i) {
         arr.push_back(h.insert(i));
     }
     Vector<bool> alive(arr.size(), true);
-    srand(1791791791);
     for (int i = 0; i < q - 1; ++i) {
         int id = rand() % (q - i);
         Vector<int> pos;

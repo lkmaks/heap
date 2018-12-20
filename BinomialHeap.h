@@ -39,7 +39,7 @@ private:
         size_t order;
         Key key;
 
-        Node(Key);
+        explicit Node(Key);
     };
 
     // LayerNode instance stores parent for all nodes with the same parent
@@ -49,7 +49,7 @@ private:
         friend Node;
     private:
         Node *parent;
-        LayerNode(Node*);
+        explicit LayerNode(Node*);
     };
 
     Vector<Node*> roots;
@@ -292,7 +292,6 @@ template<typename Key>
 void BinomialHeap<Key>::update_min_node_and_roots() {
     min_node = nullptr;
     for (int i = 0; i < roots.size(); ++i) {
-        Node *deb = roots[i];
         if (min_node == nullptr && roots[i] != nullptr) {
             min_node = roots[i];
         }

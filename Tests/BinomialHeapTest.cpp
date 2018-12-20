@@ -1,13 +1,15 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "../BinomialHeap.h"
+#include "../FibonacciHeap.h"
 #include "TimeReport.h"
+#include <queue>
 
 using testing::Eq;
-using namespace std;
 
-TEST(InsertExtract, BinomialHeapCorrectnessTest) {
-    int q = 100;
+
+TEST(InsertExtract, BinomialHeapCorrectnessTests) {
+    int q = 1000;
     BinomialHeap<int> h;
 
     ASSERT_EQ(h.is_empty(), true);
@@ -20,8 +22,31 @@ TEST(InsertExtract, BinomialHeapCorrectnessTest) {
     ASSERT_EQ(h.is_empty(), true);
 }
 
-TEST(InsertEraseByPointer, BinomialHeapCorrectnessTest) {
-    int q = 100;
+
+TEST(InsertExtractRandOrder, BinomialHeapCorrectnessTests) {
+    int q = 1000;
+    BinomialHeap<int> h;
+    std::priority_queue<int> h2;
+
+    srand(139);
+    for (int i = 0; i < q; ++i) {
+        if (rand() % 3) {
+            int x = rand() % 100;
+            h.insert(x);
+            h2.push(-x);
+        }
+        else if (!h.is_empty()) {
+            ASSERT_EQ(h.extract_min(), -h2.top());
+            h2.pop();
+        }
+    }
+}
+
+
+TEST(InsertEraseByPointer, BinomialHeapCorrectnessTests) {
+    srand(1791791791);
+    int q = 1000;
+
     BinomialHeap<int> h;
     Vector<BinomialHeap<int>::Pointer> arr;
     for (int i = 0; i < q; ++i) {
@@ -29,7 +54,6 @@ TEST(InsertEraseByPointer, BinomialHeapCorrectnessTest) {
     }
 
     Vector<bool> alive(arr.size(), true);
-    srand(1791791791);
     for (int i = 0; i < q - 1; ++i) {
         int id = rand() % (q - i);
         Vector<int> pos;
@@ -56,7 +80,7 @@ TEST(InsertEraseByPointer, BinomialHeapCorrectnessTest) {
 }
 
 
-TEST(InsertEqualNumbers, BinomialHeapCorrectnessTest) {
+TEST(InsertEqualNumbers, BinomialHeapCorrectnessTests) {
     BinomialHeap<int> h;
     h.insert(1);
     h.insert(1);
@@ -70,7 +94,7 @@ TEST(InsertEqualNumbers, BinomialHeapCorrectnessTest) {
 }
 
 
-TEST(ChangeMethod, BinomialHeapCorrectnessTest) {
+TEST(ChangeMethod, BinomialHeapCorrectnessTests) {
     BinomialHeap<int> h;
     BinomialHeap<int>::Pointer ptr = h.insert(1);
     h.insert(2);
@@ -118,8 +142,43 @@ TEST(MergeHeaps, BinomialHeapCorrectnessTests) {
 }
 
 
+TEST(MergeHeapsStressWithFibonacciHeap, BinomialHeapCorrecnessTests) {
+    int q = 1000;
+    int TST = 100;
+    for (int iter = 0; iter < TST; ++iter) {
+        BinomialHeap<int> h1, h2;
+        FibonacciHeap<int> f1, f2;
+        for (int i = 0; i < q; ++i) {
+            if (rand() % 2) {
+                int x = rand() % 100;
+                h1.insert(x);
+                f1.insert(x);
+            }
+            else {
+                int x = rand() % 100;
+                h2.insert(x);
+                f2.insert(x);
+            }
+        }
+        h1.merge(h2);
+        f1.merge(f2);
+        ASSERT_EQ(h2.is_empty(), f2.is_empty());
+        for (int i = 0; i < q; ++i) {
+            if (rand() % 2) {
+                int x = rand() % 100;
+                h1.insert(x);
+                f1.insert(x);
+            }
+            else {
+                ASSERT_EQ(h1.extract_min(), f1.extract_min());
+            }
+        }
+    }
+}
 
-TEST(GetMinOnEmptyHeap, BinomialHeapValidationTest) {
+
+
+TEST(GetMinOnEmptyHeap, BinomialHeapValidationTests) {
     BinomialHeap<int> h;
     ASSERT_THROW(h.get_min(), std::logic_error);
     BinomialHeap<int>::Pointer ptr = h.insert(1337);
@@ -129,7 +188,7 @@ TEST(GetMinOnEmptyHeap, BinomialHeapValidationTest) {
 }
 
 
-TEST(ExtractMinOnEmptyHeap, BinomialHeapValidationTest) {
+TEST(ExtractMinOnEmptyHeap, BinomialHeapValidationTests) {
     BinomialHeap<int> h;
     ASSERT_THROW(h.extract_min(), std::logic_error);
     h.insert(1337);
@@ -158,5 +217,3 @@ TEST(DISABLED_InsertExtract, BinomialHeapTimeTests) {
 
     reportTime("BinomialHeap inserts and extracts", res);
 }
-
-/// TODO: stress merge with FibonacciHeap
