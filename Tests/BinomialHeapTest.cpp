@@ -217,3 +217,22 @@ TEST(DISABLED_InsertExtract, BinomialHeapTimeTests) {
 
     reportTime("BinomialHeap inserts and extracts", res);
 }
+
+
+TEST(Merge, DISABLED_BinomialHeapTimeTests) {
+    int q = 5000000;
+    BinomialHeap<int> h1, h2;
+    srand(239);
+    for (int i = 0; i < q; ++i) {
+        h1.insert(rand());
+    }
+    for (int i = 0; i < q; ++i) {
+        h2.insert(rand());
+    }
+
+    time_t t0 = clock();
+    h1.merge(h2);
+    int res = clock() - t0;
+
+    reportTime("BinomialHeap merge (5*10^6, 5*10^6)", res);
+}

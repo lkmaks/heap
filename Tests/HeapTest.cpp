@@ -120,6 +120,39 @@ TEST(IteratorConstructor, HeapCorrectnessTests) {
 }
 
 
+TEST(MergeHeaps, HeapCorrectnessTests) {
+    srand(34234);
+    Vector<int> qs;
+    qs.push_back(1);
+    qs.push_back(2);
+    qs.push_back(3);
+    qs.push_back(4);
+    qs.push_back(5);
+    qs.push_back(100);
+
+    for (int ic = 0; ic < qs.size(); ++ic) {
+        int q = qs[ic];
+        for (int j = 0; j < 10; ++j) {
+            Heap<int> h1, h2;
+
+            for (int i = 0; i < q; ++i) {
+                if (rand() % 2) {
+                    h1.insert(i);
+                }
+                else {
+                    h2.insert(i);
+                }
+            }
+            h1.merge(h2);
+            ASSERT_EQ(h2.is_empty(), true);
+            for (int i = 0; i < q; ++i) {
+                ASSERT_EQ(h1.extract_min(), i);
+            }
+        }
+    }
+}
+
+
 TEST(GetMinOnEmptyHeap, HeapValidationTests) {
     Heap<int> h;
     ASSERT_THROW(h.get_min(), std::logic_error);
@@ -158,4 +191,26 @@ TEST(InsertExtract, DISABLED_HeapTimeTests) {
     int res = clock() - t0;
 
     reportTime("Heap inserts and extracts", res);
+}
+
+
+TEST(Merge, DISABLED_HeapTimeTests) {
+    // merge is reproduced with inserts from one heap into another
+    // second heap is not cleared, but it can be done in O(1), clearing Vector of nodes
+
+    int q = 5000000;
+    Heap<int> h1, h2;
+    srand(239);
+    for (int i = 0; i < q; ++i) {
+        h1.insert(rand());
+    }
+    for (int i = 0; i < q; ++i) {
+        h2.insert(rand());
+    }
+
+    time_t t0 = clock();
+    h1.merge(h2);
+    int res = clock() - t0;
+
+    reportTime("Heap 'merge' (5*10^6, 5*10^6)", res);
 }

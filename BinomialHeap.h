@@ -14,7 +14,7 @@ private:
 public:
     class Pointer {
         friend BinomialHeap<Key>;
-    public:
+    private:
         Node *ptr;
         explicit Pointer(Node *ptr_);
     public:

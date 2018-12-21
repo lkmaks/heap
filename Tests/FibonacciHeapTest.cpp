@@ -264,3 +264,22 @@ TEST(DISABLED_InsertExtractDecreaseAtSameElements, FibonacciHeapTimeTests) {
 
     reportTime("FibonacciHeap inserts, extracts and decreases, decreases happen often to same elements", res);
 }
+
+
+TEST(Merge, DISABLED_FibonacciHeapTimeTests) {
+    int q = 5000000;
+    FibonacciHeap<int> h1, h2;
+    srand(239);
+    for (int i = 0; i < q; ++i) {
+        h1.insert(rand());
+    }
+    for (int i = 0; i < q; ++i) {
+        h2.insert(rand());
+    }
+
+    time_t t0 = clock();
+    h1.merge(h2);
+    int res = clock() - t0;
+
+    reportTime("FibonacciHeap merge (5*10^6, 5*10^6)", res);
+}

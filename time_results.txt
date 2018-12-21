@@ -4,3 +4,6 @@ BinomialHeap inserts and extracts: 5206 ms
 FibonacciHeap inserts and extracts: 5519 ms
 FibonacciHeap inserts, extracts and decreases: 6214 ms
 FibonacciHeap inserts, extracts and decreases, decreases happen often to same elements: 6657 ms
+Heap 'merge' (5*10^6, 5*10^6): 844 ms
+BinomialHeap merge (5*10^6, 5*10^6): 0 ms
+FibonacciHeap merge (5*10^6, 5*10^6): 0 ms

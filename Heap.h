@@ -18,7 +18,7 @@ public:
         friend Heap<Key>;
     private:
         Node *ptr;
-        Pointer(Node *ptr_);
+        explicit Pointer(Node *ptr_);
     public:
         Pointer();
         Key getKey();
@@ -36,6 +36,7 @@ public:
     void change(Pointer, Key);
     Key get_min() const;
     void optimize(size_t, size_t);
+    void merge(Heap &otherHeap);
 private:
 
     class Node {
@@ -195,6 +196,14 @@ void Heap<Key>::optimize(size_t insertCount, size_t extractCount) {
     k = best_x;
 }
 
+
+template <class Key>
+void Heap<Key>::merge(Heap<Key> &otherHeap) {
+    for (int i = 0; i < otherHeap.nodes.size(); ++i) {
+        insert(otherHeap.nodes[i]->key);
+    }
+    otherHeap.nodes.clear();
+}
 
 
 
