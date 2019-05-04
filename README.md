@@ -1,4 +1,10 @@
 # heap
+
+
+This is a project for c++ course which is modified (in tihs branch) for techprog homework.
+Added file main.cpp and renamed testing executable to run_tests; Now there are 2 executables after building.
+
+
 Heap lab work for DIHT MIPT (2018, 1 sem)
 
 time_results.txt contains time measurements on my pc.
