@@ -3,4 +3,8 @@ compiler:
         -gcc
 install: ./install_dependencies.sh
 script: ./build.sh
+notifications:
+        email:
+                on_success: always
+                on_failure: always
 
